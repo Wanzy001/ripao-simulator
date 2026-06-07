@@ -58,9 +58,9 @@
       sexCondomAction: "戴套性交",
       sexCondomMeta: "负荷+8 | 欲望-8",
       oralRawAction: "无套口交",
-      oralRawMeta: "负担+20 | 性欲-14",
+      oralRawMeta: "负荷+20 | 欲望-14",
       sexRawAction: "无套性交",
-      sexRawMeta: "负担+32 | 欲望-24",
+      sexRawMeta: "负荷+32 | 欲望-24",
       skipAction: "癞蛤蟆想吃天鹅肉",
       skipMeta: "欲望+10 / 负荷+2",
       refuseAction: "",
@@ -82,6 +82,7 @@
       coreRule: "",
       gotIt: "",
       viewHistory: "查看详细复盘",
+      copyRecap: "复制复盘",
       nextButton: "下一回合",
       restartButton: "重新开始",
       historyTitle: "详细约会记录",
@@ -118,6 +119,11 @@
       carriedRisk: "携带风险",
       noClearRisk: "未形成明确风险",
       recorded: "已记录",
+      probedOutcome: "套出线索",
+      fieldTestRiskOutcome: "测试可疑",
+      fieldTestSafeOutcome: "暂未异常",
+      hospitalDiagnosedOutcome: "确诊",
+      hospitalSafeOutcome: "暂未确诊",
       diagnosisLabel: "确诊",
       routeLabel: "途径",
       reminderLabel: "提示",
@@ -234,6 +240,7 @@
       coreRule: "",
       gotIt: "",
       viewHistory: "View detailed recap",
+      copyRecap: "Copy recap",
       nextButton: "Next round",
       restartButton: "Restart",
       historyTitle: "Detailed date log",
@@ -270,6 +277,11 @@
       carriedRisk: "Carried risk",
       noClearRisk: "No clear risk formed",
       recorded: "Recorded",
+      probedOutcome: "Clue revealed",
+      fieldTestRiskOutcome: "Suspicious test",
+      fieldTestSafeOutcome: "No obvious issue",
+      hospitalDiagnosedOutcome: "Diagnosed",
+      hospitalSafeOutcome: "Not diagnosed",
       diagnosisLabel: "Diagnosis",
       routeLabel: "Route",
       reminderLabel: "Note",
@@ -344,6 +356,11 @@
       "无": "None",
       "未形成明确风险": "No clear risk formed",
       "已记录": "Recorded",
+      "套出线索": "Clue revealed",
+      "测试可疑": "Suspicious test",
+      "暂未异常": "No obvious issue",
+      "确诊": "Diagnosed",
+      "暂未确诊": "Not diagnosed",
       "现场测试：结果可疑": "On-site test: suspicious",
       "现场测试：暂未异常": "On-site test: no obvious issue",
       "医院检查：确诊": "Clinic check: diagnosed",
@@ -1255,6 +1272,7 @@
     summaryView: document.querySelector("#summary-view"),
     historyView: document.querySelector("#history-view"),
     viewHistory: document.querySelector("#view-history-btn"),
+    copyRecap: document.querySelector("#copy-recap-btn"),
     historyList: document.querySelector("#history-list"),
     backSummary: document.querySelector("#back-summary-btn"),
     next: document.querySelector("#next-btn"),
@@ -1741,6 +1759,19 @@
     }, true));
   }
 
+  function recordToolHistory(actionType, outcome, riskProfile = null) {
+    if (!state.currentDate) return;
+    state.history.push({
+      avatar: state.currentDate.avatar,
+      tags: cloneTags(state.currentDate.tags),
+      action: getActionText(actionType),
+      actionType,
+      outcome,
+      risk: false,
+      riskProfile: riskProfile || getDateRiskProfile(state.currentDate.tags)
+    });
+  }
+
   function takeFieldTest() {
     if (state.ended || !state.currentDate || state.fieldTests <= 0) return;
 
@@ -1751,10 +1782,12 @@
     if (hasDiseaseRisk(riskProfile)) {
       addToolResultTag("现场测试：结果可疑", "tag-risk");
       state.load = clamp(state.load + 5, 0, 100);
+      recordToolHistory("test", t("fieldTestRiskOutcome"), riskProfile);
       showToast(t("fieldTestRiskToast"));
     } else {
       addToolResultTag("现场测试：暂未异常", "tag-safe");
       state.load = clamp(state.load - 8, 0, 100);
+      recordToolHistory("test", t("fieldTestSafeOutcome"), riskProfile);
       showToast(t("fieldTestSafeToast"));
     }
 
@@ -1771,11 +1804,13 @@
     revealAllHiddenTags();
     if (state.riskRecords.length > 0) {
       addToolResultTag("医院检查：确诊", "tag-bad");
+      recordToolHistory("hospital", t("hospitalDiagnosedOutcome"));
       endGame("diagnosed");
       return;
     }
 
     addToolResultTag("医院检查：暂未确诊", "tag-safe");
+    recordToolHistory("hospital", t("hospitalSafeOutcome"));
     showToast(t("hospitalToast"));
     renderAll();
     checkEndAfterAction();
@@ -1809,6 +1844,7 @@
     state.desire = clamp(state.desire + 5, 0, 100);
     revealOneHiddenTag();
     state.currentDate.canProbe = false;
+    recordToolHistory("chat", t("probedOutcome"));
     els.feedback.classList.add("hidden");
     renderAll();
 
@@ -2014,8 +2050,10 @@
   }
 
   function getOutcomeClass(outcome) {
-    if (outcome === "被ta感染") return "outcome-bad";
-    if (outcome === "死里逃生" || outcome === "遗憾错过") return "outcome-warn";
+    const badOutcomes = ["被ta感染", "确诊", t("infectedOutcome"), t("hospitalDiagnosedOutcome")];
+    const warnOutcomes = ["死里逃生", "遗憾错过", "测试可疑", t("fieldTestRiskOutcome")];
+    if (badOutcomes.includes(outcome)) return "outcome-bad";
+    if (warnOutcomes.includes(outcome)) return "outcome-warn";
     return "outcome-good";
   }
 
@@ -2219,6 +2257,7 @@
       els.next.classList.add("hidden");
       els.restart.classList.remove("hidden");
       els.viewHistory.classList.remove("hidden");
+      els.copyRecap.classList.remove("hidden");
       renderStatsReport();
       renderHistoryList();
     } else {
@@ -2226,6 +2265,7 @@
       els.next.textContent = feedback.nextLabel || t("nextButton");
       els.restart.classList.add("hidden");
       els.viewHistory.classList.add("hidden");
+      els.copyRecap.classList.add("hidden");
       els.next.onclick = advanceRound;
     }
   }
@@ -2263,6 +2303,7 @@
           <div><span>${escapeHTML(t("oralRawAction"))}</span><strong>${stats.actions.shortcut}</strong></div>
           <div><span>${escapeHTML(t("sexCondomAction"))}</span><strong>${stats.actions.steady}</strong></div>
           <div><span>${escapeHTML(t("oralCondomAction"))}</span><strong>${stats.actions.light}</strong></div>
+          <div><span>${escapeHTML(t("probeButton"))}</span><strong>${stats.actions.chat}</strong></div>
           <div><span>${escapeHTML(t("coffeeTitle"))}</span><strong>${stats.actions.test}</strong></div>
           <div><span>${escapeHTML(t("restTitle"))}</span><strong>${stats.actions.hospital}</strong></div>
           <div class="action-wide"><span>${escapeHTML(t("skipAction"))}</span><strong>${stats.actions.skip}</strong></div>
@@ -2314,7 +2355,7 @@
       infected: state.riskRecords.length,
       diagnosis: diseases.length ? formatList(diseases) : t("noneValue"),
       route: state.riskRecords.length ? t("routeContact") : t("noneValue"),
-      survivedTurns: state.history.length,
+      survivedTurns: state.turn,
       actions: {
         light: state.actionCounts.light || 0,
         steady: state.actionCounts.steady || 0,
@@ -2386,6 +2427,7 @@
     els.restButton.addEventListener("click", takeHospitalCheck);
     els.buttons.forEach((button) => button.addEventListener("click", () => takeAction(button.dataset.action)));
     els.viewHistory.addEventListener("click", showHistory);
+    els.copyRecap.addEventListener("click", copyRecap);
     els.backSummary.addEventListener("click", showSummary);
     els.feedbackTitle.addEventListener("dblclick", copyRecap);
   }
