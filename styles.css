@@ -78,6 +78,7 @@ button {
 }
 
 .compliance-card {
+  position: relative;
   width: min(672px, 100%);
   margin: 0 auto;
   padding: 20px;
@@ -93,6 +94,7 @@ button {
 
 .compliance-card h1 {
   margin: 0;
+  padding-right: 54px;
   color: var(--white);
   font-size: 1.55rem;
   font-weight: 900;
@@ -283,7 +285,8 @@ button {
 }
 
 .lang-button,
-.intro-lang-button {
+.intro-lang-button,
+.compliance-lang-button {
   min-width: 42px;
   min-height: 32px;
   border: 1px solid rgba(51, 65, 85, 0.84);
@@ -296,14 +299,16 @@ button {
   transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
 }
 
-.intro-lang-button {
+.intro-lang-button,
+.compliance-lang-button {
   position: absolute;
   top: 16px;
   right: 16px;
 }
 
 .lang-button:hover,
-.intro-lang-button:hover {
+.intro-lang-button:hover,
+.compliance-lang-button:hover {
   transform: translateY(-1px);
   border-color: rgba(225, 29, 72, 0.58);
   background: rgba(76, 5, 25, 0.58);
