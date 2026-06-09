@@ -1153,6 +1153,11 @@ button {
   background: rgba(6, 78, 59, 0.22);
 }
 
+.clue-card {
+  border-color: rgba(245, 158, 11, 0.26);
+  background: rgba(120, 53, 15, 0.18);
+}
+
 .judgment-card p {
   margin: 5px 0 0;
   color: var(--slate-200);
@@ -1406,6 +1411,14 @@ button {
   color: #fb7185;
   font-size: 0.68rem;
   font-weight: 900;
+}
+
+.history-note {
+  margin-top: 5px;
+  color: var(--slate-400);
+  font-size: 0.66rem;
+  font-weight: 800;
+  line-height: 1.45;
 }
 
 .history-tags {

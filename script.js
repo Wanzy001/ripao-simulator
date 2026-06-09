@@ -4,7 +4,7 @@
   const STORAGE_KEY = "dating_health_records_v1";
   const LANG_KEY = "dating_health_language_v1";
 
-  // 等你确认阈值后，把这里改成具体数字：已出现多少条特征词后禁止“喝杯酒/套套话”。
+  // 等你确认阈值后，把这里改成具体数字：已出现多少条特征词后禁止“沟通确认”。
   const PROBE_FEATURE_LIMIT = null;
   const PROBE_RANDOM_AVAILABILITY_RATE = 0.82;
   const VISIBLE_TAG_COUNT = 3;
@@ -69,9 +69,9 @@
       restTitle: "去医院检查",
       restCost: "欲望+15 / 负荷清零",
       taskHeading: "约会对象",
-      probeButton: "喝杯酒/套套话",
-      probeMeta: "（欲望+4）",
-      probeBoostMeta: "（冷静加成：欲望+1）",
+      probeButton: "沟通确认",
+      probeMeta: "揭示1条线索 | 欲望+4",
+      probeBoostMeta: "冷静加成：欲望+1",
       oralCondomAction: "戴套口交",
       oralCondomMeta: "负荷+3 | 欲望-4",
       sexCondomAction: "戴套性交",
@@ -86,7 +86,7 @@
       introTitle: "玩法说明",
       introLine1: "目标：在欲望爆表、心理负荷爆表或确诊之前，尽量做出安全选择。",
       introLine2: "生理欲望到 100 会失控失败，到 0 会胜利；心理负荷到 100 会焦虑崩盘。",
-      introLine3: "不是每个人都有疾病线索；线索越多越要判断风险。套话、现场测试、医院检查能补信息但有代价。",
+      introLine3: "不是每个人都有疾病线索；线索越多越要判断风险。沟通确认、现场测试、医院检查能补信息但有代价。",
       startButton: "开始游戏",
       helpButton: "查看详细规则",
       helpTitle: "玩法说明",
@@ -98,7 +98,7 @@
       loseRule2: "心理负荷到 100 会焦虑崩盘。",
       loseRule3: "医院检查确诊后，本局立刻结束。",
       coreTitle: "操作",
-      coreRule: "对象会有健康、低风险、模糊可疑和高风险几类。“喝杯酒/套套话”会揭示隐藏线索并增加欲望；离开高风险对象会获得奖励，但一直跳过正常人会遗憾错过。",
+      coreRule: "对象会有健康、低风险、模糊可疑和高风险几类。“沟通确认”会揭示隐藏线索并增加欲望；离开高风险对象会获得奖励，但一直跳过正常人会遗憾错过。",
       gotIt: "知道了",
       viewHistory: "查看详细复盘",
       nextButton: "下一回合",
@@ -107,7 +107,7 @@
       backSummary: "返回结算页面",
       hiddenInfo: "线索未明",
       panicHidden: "",
-      probeUnavailable: "现在不适合继续套话",
+      probeUnavailable: "现在不适合继续沟通",
       fieldTestUsed: "现场测试已用完",
       loadAlreadyZero: "当前心理负荷为 0",
       fieldTestRiskTag: "现场测试：结果可疑",
@@ -119,10 +119,10 @@
       hospitalToast: "去医院检查：欲望+15，心理负荷清零",
       probeTitle: "又套出一点细节",
       probeMessage: "对方补了一句，看似更清楚，却也更难完全放心。",
-      calmBoostReady: "连续两次正确判断，获得冷静加成：下一次套话欲望只 +1。",
-      calmBoostUsed: "冷静加成生效：这次套话欲望只 +1。",
+      calmBoostReady: "连续两次正确判断，获得冷静加成：下一次沟通确认欲望只 +1。",
+      calmBoostUsed: "冷静加成生效：这次沟通确认欲望只 +1。",
       healthyRewardNote: "明显健康对象 + 安全互动：放松感生效，额外降低欲望和心理负荷。",
-      correctStreakNote: "连续两次正确判断，已获得冷静加成：下一次套话欲望增加更少。",
+      correctStreakNote: "连续两次正确判断，已获得冷静加成：下一次沟通确认欲望增加更少。",
       desireGuardNote: "理智拉回触发：第一次欲望爆表没有立刻失败，欲望降回 85。",
       desireGuardToast: "理智拉回触发：欲望降回 85，只此一次。",
       actionFeedbackTitle: "这一轮结束",
@@ -143,7 +143,7 @@
       carriedRisk: "携带风险",
       noClearRisk: "未形成明确风险",
       recorded: "已记录",
-      probedOutcome: "套出线索",
+      probedOutcome: "沟通补充",
       fieldTestRiskOutcome: "测试可疑",
       fieldTestSafeOutcome: "暂未异常",
       hospitalDiagnosedOutcome: "确诊",
@@ -163,6 +163,12 @@
       actionStatsTitle: "行为统计（次数）",
       survivalTurnsLabel: "存活回合",
       judgmentLabel: "判断反馈",
+      clueExplainLabel: "线索解释",
+      clueExplainVeryHigh: "多条强线索指向同一类风险，离开、现场测试或医院检查都比硬赌更合理。",
+      clueExplainClearRisk: "风险线索已经比较集中，不建议只靠侥幸继续推进。",
+      clueExplainWeakOnly: "目前只有弱线索或普通解释，不能直接判定高风险，适合先沟通确认。",
+      clueExplainHealthy: "健康和边界线索较多，暂未形成明确风险；一直跳过可能错过正常对象。",
+      clueExplainNoRisk: "当前看到的主要是职业、生活状态或普通解释，还没有疾病特征组合。",
       desirePlain: "生理欲望",
       loadPlain: "心理负荷",
       infectedOutcome: "被ta感染",
@@ -232,9 +238,9 @@
       restTitle: "Go to clinic",
       restCost: "Desire +15 / load clears",
       taskHeading: "Date",
-      probeButton: "Drink / probe",
-      probeMeta: "(Desire +4)",
-      probeBoostMeta: "(Calm bonus: Desire +1)",
+      probeButton: "Clarify / ask",
+      probeMeta: "Reveal 1 clue | Desire +4",
+      probeBoostMeta: "Calm bonus: Desire +1",
       oralCondomAction: "Protected oral",
       oralCondomMeta: "Load +3 | Desire -4",
       sexCondomAction: "Protected sex",
@@ -261,7 +267,7 @@
       loseRule2: "Mental load at 100 causes anxiety collapse.",
       loseRule3: "A confirmed clinic diagnosis ends the run immediately.",
       coreTitle: "Actions",
-      coreRule: "Dates now range from healthy and low-risk to ambiguous and high-risk. Drink / probe reveals hidden clues and raises desire. Leaving a high-risk date is rewarded, but skipping normal people becomes a missed chance.",
+      coreRule: "Dates now range from healthy and low-risk to ambiguous and high-risk. Clarify / ask reveals hidden clues and raises desire. Leaving a high-risk date is rewarded, but skipping normal people becomes a missed chance.",
       gotIt: "Got it",
       viewHistory: "View detailed recap",
       nextButton: "Next round",
@@ -306,7 +312,7 @@
       carriedRisk: "Carried risk",
       noClearRisk: "No clear risk formed",
       recorded: "Recorded",
-      probedOutcome: "Clue revealed",
+      probedOutcome: "Clarified clue",
       fieldTestRiskOutcome: "Suspicious test",
       fieldTestSafeOutcome: "No obvious issue",
       hospitalDiagnosedOutcome: "Diagnosed",
@@ -326,6 +332,12 @@
       actionStatsTitle: "Action stats (times)",
       survivalTurnsLabel: "Survived rounds",
       judgmentLabel: "Judgment",
+      clueExplainLabel: "Clue read",
+      clueExplainVeryHigh: "Multiple strong clues point in the same risk direction. Leaving, testing, or clinic check is wiser than gambling.",
+      clueExplainClearRisk: "The risk clues are concentrated enough that relying on luck is not a good plan.",
+      clueExplainWeakOnly: "So far the clues are weak or explainable. This is not enough to call high risk; clarify first.",
+      clueExplainHealthy: "Health and boundary clues are strong, and no clear risk has formed. Skipping everyone may miss normal dates.",
+      clueExplainNoRisk: "The visible clues are mostly role, lifestyle, or ordinary explanations, not a disease pattern.",
       desirePlain: "Physical desire",
       loadPlain: "Mental load",
       infectedOutcome: "Infected by them",
@@ -372,7 +384,7 @@
       "无套性交": "Unprotected sex",
       "礼貌离开": "Politely leave",
       "拒绝/离开": "Refuse / leave",
-      "套话": "Probe",
+      "沟通确认": "Clarify / ask",
       "现场测试": "On-site test",
       "医院检查": "Clinic check",
       "理智享受": "Rational enjoy",
@@ -384,7 +396,7 @@
       "无": "None",
       "未形成明确风险": "No clear risk formed",
       "已记录": "Recorded",
-      "套出线索": "Clue revealed",
+      "沟通补充": "Clarified clue",
       "测试可疑": "Suspicious test",
       "暂未异常": "No obvious issue",
       "确诊": "Diagnosed",
@@ -733,7 +745,7 @@
     rush: "无套性交",
     skip: "礼貌离开",
     refuse: "拒绝/离开",
-    chat: "套话",
+    chat: "沟通确认",
     test: "现场测试",
     hospital: "医院检查"
   };
@@ -1137,6 +1149,39 @@
     neutral("最近晒太阳多，皮肤有点红"),
     neutral("减脂期吃得少，看起来偏瘦"),
     neutral("穿得很严实，说是怕冷")
+  ];
+
+  const LIFE_STATUS_CLUES = [
+    neutral("朋友圈多是工作和运动"),
+    neutral("聊天时会认真听完你的担心"),
+    neutral("提前问你能不能接受慢一点"),
+    neutral("主动确认你的边界"),
+    neutral("不催你马上做决定"),
+    neutral("说可以先聊清楚再继续"),
+    neutral("生活节奏看起来很稳定"),
+    neutral("手机日程里排着运动和工作"),
+    neutral("房间里有书和运动装备"),
+    neutral("外卖记录大多是正常餐食"),
+    neutral("很自然地提到最近体检"),
+    neutral("没有回避安全措施话题"),
+    neutral("愿意把选择权交给你"),
+    neutral("说不舒服就可以随时停"),
+    neutral("对陌生社交软件不太熟"),
+    neutral("社交圈看起来比较固定"),
+    neutral("聊天内容更多是生活和兴趣"),
+    neutral("不拿情史当谈资"),
+    neutral("说最近主要忙工作和休息"),
+    neutral("会主动保持合适距离"),
+    neutral("约会前确认了你的时间安排"),
+    neutral("说今天可以只散步聊天"),
+    neutral("对安全套品牌和尺寸有准备"),
+    neutral("没有劝你喝太多酒"),
+    neutral("愿意把灯打开好好沟通"),
+    neutral("对健康问题没有明显防御"),
+    neutral("说不确定就先别推进"),
+    neutral("聊天中没有贬低你的谨慎"),
+    neutral("能接受你临时改变主意"),
+    neutral("把检测和边界当成正常话题")
   ];
 
   const EXCELLENT_NORMAL_CLUES = [
@@ -1674,8 +1719,8 @@
     const strongFeaturePool = featurePool.filter((item) => item.score >= 70);
     const excellentNormalPool = getExcellentNormalPool(roleTag);
     const plainNeutralPool = NEUTRAL_CLUES.filter((item) => item.color !== "tag-warn");
-    const softNormalPool = combinePools(excellentNormalPool, plainNeutralPool, MISLEADING_CLUES);
-    const uncertainPool = combinePools(MISLEADING_CLUES, plainNeutralPool, NEUTRAL_CLUES);
+    const softNormalPool = combinePools(excellentNormalPool, LIFE_STATUS_CLUES, plainNeutralPool, MISLEADING_CLUES);
+    const uncertainPool = combinePools(MISLEADING_CLUES, LIFE_STATUS_CLUES, plainNeutralPool, NEUTRAL_CLUES);
     const mediumRiskPool = combinePools(mediumFeaturePool, weakFeaturePool);
     const strongRiskPool = combinePools(strongFeaturePool, mediumFeaturePool);
 
@@ -2329,6 +2374,23 @@
     return t("actionFeedbackMessage");
   }
 
+  function getClueExplanationText(riskProfile) {
+    if (!riskProfile) return "";
+    if (riskProfile.score >= 70 || riskProfile.rawScore >= 75 || riskProfile.diseases?.length >= 2) {
+      return t("clueExplainVeryHigh");
+    }
+    if (riskProfile.score >= 45 || riskProfile.diseases?.length) {
+      return t("clueExplainClearRisk");
+    }
+    if (riskProfile.normalCount >= 2 && riskProfile.score < 25) {
+      return t("clueExplainHealthy");
+    }
+    if (riskProfile.rawScore > 0) {
+      return t("clueExplainWeakOnly");
+    }
+    return t("clueExplainNoRisk");
+  }
+
   function getNextLabel(actionType, outcome, riskProfile, gotRisk) {
     if (gotRisk) return t("nextGotRisk");
     if (outcome === "死里逃生") return t("nextDeadEscape");
@@ -2342,6 +2404,7 @@
 
   function buildRoundFeedback(actionType, outcome, riskProfile, gotRisk, beforeStats, afterStats, rewardNotes = []) {
     const judgment = getJudgmentText(actionType, outcome, riskProfile, gotRisk);
+    const clueExplanation = getClueExplanationText(riskProfile);
     const rewardHTML = rewardNotes.length
       ? `
           <div class="judgment-card reward-card">
@@ -2365,6 +2428,10 @@
           <div class="judgment-card">
             <span>${escapeHTML(t("judgmentLabel"))}</span>
             <p>${escapeHTML(judgment)}</p>
+          </div>
+          <div class="judgment-card clue-card">
+            <span>${escapeHTML(t("clueExplainLabel"))}</span>
+            <p>${escapeHTML(clueExplanation)}</p>
           </div>
           ${rewardHTML}
         </div>
@@ -2546,6 +2613,7 @@
       const carried = item.riskProfile?.diseases?.length ? formatList(item.riskProfile.diseases) : t("noClearRisk");
       const outcome = item.outcome || "已记录";
       const action = getActionText(item.actionType, item.action);
+      const clueExplanation = getClueExplanationText(item.riskProfile);
 
       node.className = "history-item";
       node.innerHTML = `
@@ -2554,6 +2622,7 @@
           <div class="history-tags">${tags}</div>
           <div class="history-action">${t("recordAction")}: ${escapeHTML(action)}</div>
           <div class="history-disease">${t("carriedRisk")}: ${escapeHTML(carried)}</div>
+          <div class="history-note">${escapeHTML(t("clueExplainLabel"))}: ${escapeHTML(clueExplanation)}</div>
         </div>
         <div class="history-outcome ${getOutcomeClass(outcome)}">${escapeHTML(translateStatic(outcome))}</div>
       `;
