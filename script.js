@@ -11,6 +11,7 @@
   const HIDDEN_TAG_COUNT = 1;
   const AVATAR_MATCH_RATE = 0.82;
   const AVATAR_ASSET_VERSION = "20260607-female-halfbody-v2";
+  const AVATAR_PRELOAD_LIMIT = 3;
   const PROBE_DESIRE_COST = 4;
   const PROBE_BOOST_DESIRE_COST = 1;
   const HOSPITAL_DESIRE_COST = 15;
@@ -1523,6 +1524,7 @@
   let state = freshState();
   let lastFeedback = null;
   let toastTimer = 0;
+  const avatarPreloadCache = new Set();
 
   function freshState() {
     return {
@@ -1727,7 +1729,28 @@
     const drawPool = matchedDeck.length && chance(AVATAR_MATCH_RATE) ? matchedDeck : state.avatarDeck;
     const avatar = sample(drawPool, drawPool[0]);
     state.avatarDeck = state.avatarDeck.filter((item) => item.src !== avatar.src);
+    preloadAvatar(avatar.src);
     return avatar.src;
+  }
+
+  function preloadAvatar(src) {
+    if (!src || avatarPreloadCache.has(src)) return;
+    avatarPreloadCache.add(src);
+    const image = new Image();
+    image.decoding = "async";
+    image.src = src;
+    if (image.decode) image.decode().catch(() => {});
+  }
+
+  function preloadUpcomingAvatars() {
+    if (!state.avatarDeck.length) return;
+    const upcoming = state.avatarDeck.slice(0, AVATAR_PRELOAD_LIMIT).map((avatar) => avatar.src);
+    const run = () => upcoming.forEach(preloadAvatar);
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(run, { timeout: 900 });
+    } else {
+      window.setTimeout(run, 0);
+    }
   }
 
   function startGame() {
@@ -2011,19 +2034,24 @@
     const current = state.currentDate;
     if (!current) return;
 
-    els.avatar.src = current.avatar || "";
+    if (els.avatar.getAttribute("src") !== (current.avatar || "")) {
+      els.avatar.src = current.avatar || "";
+    }
     els.avatar.alt = current.avatar ? t("taskHeading") : "";
+    preloadUpcomingAvatars();
     els.line.textContent = text(current.line);
     els.taskStatus.classList.toggle("hidden", !current.tags.some((tag) => tag.revealed && tag.risk));
     els.tags.innerHTML = "";
+    const fragment = document.createDocumentFragment();
 
     current.tags.forEach((tag, index) => {
       const node = document.createElement("div");
       node.className = tag.revealed ? `tag-badge ${tag.color || "tag-neutral"}` : "tag-badge tag-hidden";
       node.style.animationDelay = `${index * 45}ms`;
       node.textContent = tag.revealed ? text(tag.text) : t("hiddenInfo");
-      els.tags.append(node);
+      fragment.append(node);
     });
+    els.tags.append(fragment);
   }
 
   function renderButtons() {
@@ -2737,6 +2765,7 @@
       return;
     }
 
+    const fragment = document.createDocumentFragment();
     state.history.forEach((item) => {
       const node = document.createElement("div");
       const tags = item.tags.length
@@ -2749,7 +2778,7 @@
 
       node.className = "history-item";
       node.innerHTML = `
-        <div class="history-avatar">${item.avatar ? `<img src="${item.avatar}" alt="">` : ""}</div>
+        <div class="history-avatar">${item.avatar ? `<img src="${escapeHTML(item.avatar)}" alt="" loading="lazy" decoding="async">` : ""}</div>
         <div class="history-main">
           <div class="history-tags">${tags}</div>
           <div class="history-action">${t("recordAction")}: ${escapeHTML(action)}</div>
@@ -2758,8 +2787,9 @@
         </div>
         <div class="history-outcome ${getOutcomeClass(outcome)}">${escapeHTML(translateStatic(outcome))}</div>
       `;
-      els.historyList.append(node);
+      fragment.append(node);
     });
+    els.historyList.append(fragment);
   }
 
   function getRunStats() {
